@@ -185,6 +185,14 @@ class App {
     document
       .getElementById("workout-items")
       .addEventListener("click", this._removeItem.bind(this, "workout"));
+
+    document
+      .getElementById("filter-meals")
+      .addEventListener("keyup", this._filterItems.bind(this, "meal"));
+
+    document
+      .getElementById("filter-workouts")
+      .addEventListener("keyup", this._filterItems.bind(this, "workout"));
   }
 
   _newItem(type, e) {
@@ -229,6 +237,18 @@ class App {
           : this._tracker.removeWorkout(id);
 
         e.target.closest(".card").remove();
+      }
+    }
+  }
+
+  _filterItems(type, e) {
+    const filterInput = e.target.value.toLowerCase();
+    const items = document.querySelectorAll(`#${type}-items .card`);
+    for (const item of items) {
+      item.classList.remove("hidden");
+      const name = item.querySelector("h4").textContent.toLowerCase();
+      if (!name.includes(filterInput)) {
+        item.classList.add("hidden");
       }
     }
   }
