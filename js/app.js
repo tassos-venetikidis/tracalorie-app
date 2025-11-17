@@ -1,6 +1,6 @@
 class CalorieTracker {
   constructor() {
-    this._calorieLimit = 2500;
+    this._calorieLimit = 0;
     this._totalCalories = 0;
     this._meals = [];
     this._workouts = [];
@@ -47,6 +47,13 @@ class CalorieTracker {
       this._workouts.splice(index, 1);
       this._render();
     }
+  }
+
+  reset() {
+    this._totalCalories = 0;
+    this._meals = [];
+    this._workouts = [];
+    this._render();
   }
 
   // Private Methods
@@ -193,6 +200,10 @@ class App {
     document
       .getElementById("filter-workouts")
       .addEventListener("keyup", this._filterItems.bind(this, "workout"));
+
+    document
+      .getElementById("reset")
+      .addEventListener("click", this._reset.bind(this));
   }
 
   _newItem(type, e) {
@@ -250,6 +261,21 @@ class App {
       if (!name.includes(filterInput)) {
         item.classList.add("hidden");
       }
+    }
+  }
+
+  _reset() {
+    if (confirm("Are you sure you want to reset?")) {
+      this._tracker.reset();
+
+      document
+        .querySelectorAll("#meal-items .card")
+        .forEach((item) => item.remove());
+      document
+        .querySelectorAll("#workout-items .card")
+        .forEach((item) => item.remove());
+      document.getElementById("filter-meals").value = "";
+      document.getElementById("filter-workouts").value = "";
     }
   }
 }
