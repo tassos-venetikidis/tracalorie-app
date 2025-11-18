@@ -11,13 +11,15 @@ class CalorieTracker {
     this._displayCaloriesBurned();
     this._displayCaloriesRemaining();
     this._displayCaloriesProgress();
+
+    document.getElementById("limit").value = this._calorieLimit;
   }
 
   // Public Methods/API
 
   addMeal(meal) {
     this._meals.push(meal);
-    Storage.updateMeals(this._meals);
+    Storage.saveMeals(this._meals);
     this._totalCalories += meal.calories;
     Storage.updateTotalCalories(this._totalCalories);
     this._displayNewMeal(meal);
@@ -26,7 +28,7 @@ class CalorieTracker {
 
   addWorkout(workout) {
     this._workouts.push(workout);
-    Storage.updateWorkouts(this._workouts);
+    Storage.saveWorkouts(this._workouts);
     this._totalCalories -= workout.calories;
     Storage.updateTotalCalories(this._totalCalories);
     this._displayNewWorkout(workout);
@@ -40,7 +42,7 @@ class CalorieTracker {
       this._totalCalories -= meal.calories;
       Storage.updateTotalCalories(this._totalCalories);
       this._meals.splice(index, 1);
-      Storage.updateMeals(this._meals);
+      Storage.saveMeals(this._meals);
       this._render();
     }
   }
@@ -52,13 +54,12 @@ class CalorieTracker {
       this._totalCalories += workout.calories;
       Storage.updateTotalCalories(this._totalCalories);
       this._workouts.splice(index, 1);
-      Storage.updateWorkouts(this._workouts);
+      Storage.saveWorkouts(this._workouts);
       this._render();
     }
   }
 
   reset() {
-    this._calorieLimit = 2000;
     this._totalCalories = 0;
     this._meals = [];
     this._workouts = [];
@@ -250,11 +251,11 @@ class Storage {
     return workouts;
   }
 
-  static updateMeals(meals) {
+  static saveMeals(meals) {
     localStorage.setItem("meals", JSON.stringify(meals));
   }
 
-  static updateWorkouts(workouts) {
+  static saveWorkouts(workouts) {
     localStorage.setItem("workouts", JSON.stringify(workouts));
   }
 
